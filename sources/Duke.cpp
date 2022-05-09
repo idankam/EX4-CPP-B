@@ -14,6 +14,14 @@ namespace coup {
         this->_numOfCoins = this->_numOfCoins + 3;
         this->_game.nextPlayerTurn();
     }
-    void Duke::block(Player &player) {}   
+    void Duke::block(Player &player) {
+        if(!player.isAlive() || !this->isAlive()){
+            throw invalid_argument("player not in the game!");
+        }
+        if(!player.isForeignAid()){
+            throw invalid_argument("player didnt foreign aid!");
+        }
+        player.cancelForeignAid();
+    }   
 
 }
