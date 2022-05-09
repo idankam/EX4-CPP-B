@@ -22,7 +22,7 @@ namespace coup {
             throw invalid_argument("not enough coins!");   
         }
         
-        if (this->_numOfCoins <= 6){
+        if (this->_numOfCoins <= coup::HIGH_BORDER_ASSASSIN){
             this->_numOfCoins -= this->needToCoup;
             this->_game.removePlayer(&player);
             player.kill();
@@ -30,11 +30,15 @@ namespace coup {
             this->_killed_player_ID = player.getID();
         }
         else{
-            this->_numOfCoins -= 7;
+            this->_numOfCoins -= coup::PAYMENT_FOR_COUP;
             this->_game.removePlayer(&player);
         }
-        
-        // this->_game.nextPlayerTurn();
+        if(this->getID() < player.getID()){
+            this->_game.nextPlayerTurn();
+        }
+        else if(this->getID() == this->_game.getLastInRoundPlayerID()){
+            this->_game.firstPlayerTurn();
+        }
     }
 
 }

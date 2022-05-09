@@ -28,15 +28,15 @@ namespace coup {
     }
 
     void Game::nextPlayerTurn() {
-        if (this->_players_ID.size() < 2) {
-            throw invalid_argument("No enough players.");
-        }
+        // if (this->_players_ID.size() < 2) {
+        //     throw invalid_argument("No enough players.");
+        // }
         this->playerTurn++;
         this->playerTurn = this->playerTurn % this->_players_ID.size();
     }
 
     void Game::addPlayerName(const string& playerName, int playerID){
-        if(this->_players.size() == 6){
+        if(this->_players.size() == coup::HIGH_BORDER_ASSASSIN){
             throw invalid_argument("Max players, can't add more.");
         }
         this->_players.push_back(playerName);
@@ -44,7 +44,7 @@ namespace coup {
     }
 
     void Game::addPlayer(Player* player) {
-        if(this->_players_alive.size() == 6){
+        if(this->_players_alive.size() == coup::HIGH_BORDER_ASSASSIN){
             throw invalid_argument("Max players, can't add more.");
         }
         this->_players_alive.push_back(player);
@@ -57,6 +57,9 @@ namespace coup {
     string Game::winner() {
         if (this->_players_ID.size() >= 2) {
             throw invalid_argument("No winner yet.");
+        }
+        if (!this->isGameStarted()){
+            throw invalid_argument("game didnt started yet.");
         }
 
         size_t i=0;
@@ -78,7 +81,7 @@ namespace coup {
             }
         }
         auto itPos = _players_ID.begin() + i;
-        auto newIt = _players_ID.insert(itPos, id);
+        _players_ID.insert(itPos, id);
     }
 
     Player* Game::getPlayerByID(int id){

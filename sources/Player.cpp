@@ -6,6 +6,9 @@ namespace coup {
 
     Player::Player(Game &game, const string& playerName)
             : _game(game), _name(playerName), _numOfCoins(0), _is_foreign_aid(false), _is_in_game(true), _is_kill(false), _player_ID(game.objectCount), _killed_player_ID(-1), _is_steal(false), _stole_from_ID(-1), _steal_coins(0) {
+        if(game.isGameStarted()){
+            throw invalid_argument("game already started!");
+        }
         this->_game.addPlayerName(playerName, this->_player_ID);
         this->_game.addPlayer(this);
         game.objectCount++;
@@ -31,6 +34,9 @@ namespace coup {
     }
 
     void Player::coup(Player &other_player) {
+        if(!this->isAlive() || !other_player.isAlive()){
+            throw invalid_argument("player not in the game!");
+        }
         this->checkCanMove();
         if (this->needToCoup > this->_numOfCoins) {
             throw invalid_argument( "You need more coins!");
@@ -38,23 +44,26 @@ namespace coup {
         this->_numOfCoins -= this->needToCoup;
         this->_game.removePlayer(&other_player);
         other_player._is_in_game = false;
-        // this->_game.nextPlayerTurn();
+        if(this->getID() < other_player.getID()){
+            this->_game.nextPlayerTurn();
+        }
+        else if(this->getID() == this->_game.getLastInRoundPlayerID()){
+            this->_game.firstPlayerTurn();
+        }
     }
 
     void Player::checkCanMove() {
+        if (this->_game.players().size() < 2){
+            throw invalid_argument( "only one player in game!");
+        }
         if (this->_game.turnID() != this->_player_ID) {
             throw invalid_argument( "Wait to your turn!");
         }
         this->resetParametersFromLastRound();
-        // if (this->_game.turn() != this->_name) {
-        //     cout << this->_game.turn();
-        //     cout << this->_name;
-        //     throw invalid_argument( "Wait to your turn!");
-        // }
     }
 
-    void Player::checkNeedToCoup(){
-        if(this->_numOfCoins >= 10){
+    void Player::checkNeedToCoup() const{
+        if(this->_numOfCoins >= coup::MUST_COUP){
             throw invalid_argument( "You must coup!");
         }
     }
@@ -64,7 +73,7 @@ namespace coup {
             this->_numOfCoins -= 2;
             return 2;
         }
-        else if(this->_numOfCoins == 1){
+        if(this->_numOfCoins == 1){
             this->_numOfCoins -= 1;
             return 1;
         }
@@ -88,5 +97,6 @@ namespace coup {
         _is_steal = false;
         _stole_from_ID = -1;
         _steal_coins = 0;
+        this->_game.gameStarted();
     }
 }

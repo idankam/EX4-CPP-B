@@ -41,7 +41,7 @@ namespace coup {
         virtual void coup(Player &other_player);
         void income();
         void foreign_aid();
-        void checkNeedToCoup();
+        void checkNeedToCoup() const;
         std::string getName() { return _name;}
         int getID() { return _player_ID;}
         bool isAlive() {return _is_in_game;}

@@ -21,5 +21,9 @@ namespace coup {
         deadPlayer->setAlive();
 
         player.resetKillParameters();
+
+        if(deadPlayerID < this->_game.turnID()){
+            this->_game.nextPlayerTurn();
+        }
     }
 }

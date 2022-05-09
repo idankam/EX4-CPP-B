@@ -15,10 +15,9 @@ namespace coup {
         if(player1.coins() < 1){
             throw invalid_argument("player 1 doesn't have coins at all!");
         }
-        else{
-            player1.takeCoin();
-            player2.addCoin();
-        }
+        
+        player1.takeCoin();
+        player2.addCoin();
         this->_game.nextPlayerTurn();
     }
     void Ambassador::block(Player &player) {

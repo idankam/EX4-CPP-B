@@ -24,6 +24,10 @@ namespace coup {
         int coins = player.stolen();
         this->_numOfCoins += coins;
 
+        this->_is_steal = true;
+        this->_stole_from_ID = player.getID();
+        this->_steal_coins = coins;
+        
         this->_game.nextPlayerTurn();
     }
     string Captain::role() const { return "Captain"; }
